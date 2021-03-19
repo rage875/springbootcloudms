@@ -15,9 +15,10 @@ public class UserController {
 
 	// Defining basic CRUD operations
 	@GetMapping()
-	public String getUsers(@RequestParam(value = "page") int page,
-			@RequestParam(value = "limit") int limit) {
-		return String.format("Get users was called: page:%d, limit:%d", page, limit);
+	public String getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "limit", defaultValue = "50") int limit,
+			@RequestParam(value = "sort", required = false) String sort) {
+		return String.format("Get users was called: page:%d, limit:%d, sort:%s", page, limit, sort);
 	}
 
 	@GetMapping(path="/{id}")
