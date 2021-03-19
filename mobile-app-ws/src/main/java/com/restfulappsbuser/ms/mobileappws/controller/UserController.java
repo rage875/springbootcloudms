@@ -1,5 +1,6 @@
 package com.restfulappsbuser.ms.mobileappws.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.restfulappsbuser.ms.mobileappws.model.reponse.User;
 
 @RestController
 @RequestMapping("users")
@@ -21,9 +24,19 @@ public class UserController {
 		return String.format("Get users was called: page:%d, limit:%d, sort:%s", page, limit, sort);
 	}
 
-	@GetMapping(path="/{id}")
-	public String getUser(@PathVariable String id) {
-		return String.format("Get user was called %s", id);
+	@GetMapping(path="/{id}",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+					} )
+	public User getUser(@PathVariable String id) {
+		User user = new User();
+
+		user.setFirstName("first");
+		user.setLastName("last");
+		user.setEmail("@test");
+
+		return user;
 	}
 	
 	@PostMapping
