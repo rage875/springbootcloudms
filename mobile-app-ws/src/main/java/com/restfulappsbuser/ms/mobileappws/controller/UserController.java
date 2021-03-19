@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.restfulappsbuser.ms.mobileappws.model.reponse.User;
+import com.restfulappsbuser.ms.mobileappws.model.reponse.UserRes;
+import com.restfulappsbuser.ms.mobileappws.model.request.UserDetailsRequestModel;
 
 @RestController
 @RequestMapping("users")
@@ -31,34 +33,47 @@ public class UserController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 					} )
-	public ResponseEntity<User> getUser(@PathVariable String id) {
-		User user = new User();
+	public ResponseEntity<UserRes> getUser(@PathVariable String id) {
+		UserRes userRes = new UserRes();
 
-		user.setFirstName("first");
-		user.setLastName("last");
-		user.setEmail("@test");
+		userRes.setFirstName("first");
+		userRes.setLastName("last");
+		userRes.setEmail("@test");
 
-		return new ResponseEntity<User>(
-				user,
+		return new ResponseEntity<UserRes>(
+				userRes,
 				HttpStatus.OK
 				);
 	}
 
-	@PostMapping
-	public ResponseEntity<String> createUser() {
-		return new ResponseEntity<String>(
-				"Create user was called",
+	@PostMapping(consumes = {
+						MediaType.APPLICATION_XML_VALUE,
+						MediaType.APPLICATION_JSON_VALUE},
+				produces = {
+						MediaType.APPLICATION_XML_VALUE,
+						MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<UserRes> createUser(
+			@RequestBody UserDetailsRequestModel userDetails) {
+		UserRes userRes = new UserRes();
+
+		userRes.setFirstName(userDetails.getFirstName());
+		userRes.setLastName(userDetails.getLastName());
+		userRes.setEmail(userDetails.getEmail());
+
+		return new ResponseEntity<UserRes>(
+				userRes,
 				HttpStatus.CREATED
 				);
 	}
-	
+
 	@PutMapping
 	public String updateUser(@PathVariable String id) {
 		return "Update user was called";
 	}
-	
+
 	@DeleteMapping
 	public String deleteUser() {
 		return "Delete user was called";
 	}
+
 }
