@@ -1,6 +1,8 @@
 package com.restfulappsbuser.ms.mobileappws.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,19 +31,25 @@ public class UserController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 					} )
-	public User getUser(@PathVariable String id) {
+	public ResponseEntity<User> getUser(@PathVariable String id) {
 		User user = new User();
 
 		user.setFirstName("first");
 		user.setLastName("last");
 		user.setEmail("@test");
 
-		return user;
+		return new ResponseEntity<User>(
+				user,
+				HttpStatus.OK
+				);
 	}
-	
+
 	@PostMapping
-	public String createUser() {
-		return "Create user was called";
+	public ResponseEntity<String> createUser() {
+		return new ResponseEntity<String>(
+				"Create user was called",
+				HttpStatus.CREATED
+				);
 	}
 	
 	@PutMapping
