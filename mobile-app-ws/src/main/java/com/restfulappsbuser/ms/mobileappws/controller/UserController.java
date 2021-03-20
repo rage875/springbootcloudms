@@ -1,5 +1,7 @@
 package com.restfulappsbuser.ms.mobileappws.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +55,7 @@ public class UserController {
 						MediaType.APPLICATION_XML_VALUE,
 						MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<UserRes> createUser(
+			@Valid
 			@RequestBody UserDetailsRequestModel userDetails) {
 		UserRes userRes = new UserRes();
 
