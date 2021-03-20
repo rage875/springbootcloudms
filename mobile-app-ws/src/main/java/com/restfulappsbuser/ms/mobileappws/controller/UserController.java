@@ -1,5 +1,9 @@
 package com.restfulappsbuser.ms.mobileappws.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,7 @@ import com.restfulappsbuser.ms.mobileappws.model.request.UserDetailsRequestModel
 @RestController
 @RequestMapping("users")
 public class UserController {
+	private Map<String, UserRes> users;
 
 	// Defining basic CRUD operations
 	@GetMapping()
@@ -36,16 +41,20 @@ public class UserController {
 					MediaType.APPLICATION_JSON_VALUE
 					} )
 	public ResponseEntity<UserRes> getUser(@PathVariable String id) {
-		UserRes userRes = new UserRes();
-
-		userRes.setFirstName("first");
-		userRes.setLastName("last");
-		userRes.setEmail("@test");
-
-		return new ResponseEntity<UserRes>(
-				userRes,
-				HttpStatus.OK
-				);
+	
+		if(users.containsKey(id))
+		{
+			return new ResponseEntity<>(
+					users.get(id),
+					HttpStatus.OK
+					);
+		}
+		else
+		{
+			return new ResponseEntity<>(
+					HttpStatus.NO_CONTENT
+					);
+		}
 	}
 
 	@PostMapping(consumes = {
@@ -63,6 +72,15 @@ public class UserController {
 		userRes.setLastName(userDetails.getLastName());
 		userRes.setEmail(userDetails.getEmail());
 
+		String userId = UUID.randomUUID().toString();
+		userRes.setId(userId);
+
+		if(users == null) 
+		{
+			users = new HashMap<>();
+		}
+		users.put(userId, userRes);
+		
 		return new ResponseEntity<UserRes>(
 				userRes,
 				HttpStatus.CREATED
