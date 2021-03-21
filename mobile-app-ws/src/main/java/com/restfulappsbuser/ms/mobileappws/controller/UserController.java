@@ -43,7 +43,7 @@ public class UserController {
 					MediaType.APPLICATION_JSON_VALUE
 					} )
 	public ResponseEntity<UserRes> getUser(@PathVariable String id) {
-	
+
 		if(users.containsKey(id))
 		{
 			return new ResponseEntity<>(
