@@ -1,11 +1,10 @@
 package com.restfulappsbuser.ms.mobileappws.controller;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +22,15 @@ import com.restfulappsbuser.ms.mobileappws.exceptions.UserServiceException;
 import com.restfulappsbuser.ms.mobileappws.model.reponse.UserRes;
 import com.restfulappsbuser.ms.mobileappws.model.request.UpdateUserDetailsRequestModel;
 import com.restfulappsbuser.ms.mobileappws.model.request.UserDetailsRequestModel;
+import com.restfulappsbuser.ms.mobileappws.userservice.UserService;
 
 @RestController
 @RequestMapping("users")
 public class UserController {
 	private Map<String, UserRes> users;
+
+	@Autowired
+	UserService userService;
 
 	// Defining basic CRUD operations
 	@GetMapping()
@@ -74,20 +77,9 @@ public class UserController {
 	public ResponseEntity<UserRes> createUser(
 			@Valid
 			@RequestBody UserDetailsRequestModel userDetails) {
-		UserRes userRes = new UserRes();
 
-		userRes.setFirstName(userDetails.getFirstName());
-		userRes.setLastName(userDetails.getLastName());
-		userRes.setEmail(userDetails.getEmail());
-
-		String userId = UUID.randomUUID().toString();
-		userRes.setId(userId);
-
-		if(users == null) 
-		{
-			users = new HashMap<>();
-		}
-		users.put(userId, userRes);
+		// Without dependency injection = new UserService().createUser(userDetails);
+		UserRes userRes = userService.createUser(userDetails);
 
 		return new ResponseEntity<UserRes>(
 				userRes,
