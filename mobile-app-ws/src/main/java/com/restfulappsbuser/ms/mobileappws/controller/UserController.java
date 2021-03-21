@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.restfulappsbuser.ms.mobileappws.model.reponse.UserRes;
+import com.restfulappsbuser.ms.mobileappws.model.request.UpdateUserDetailsRequestModel;
 import com.restfulappsbuser.ms.mobileappws.model.request.UserDetailsRequestModel;
 
 @RestController
@@ -32,6 +33,7 @@ public class UserController {
 	public String getUsers(@RequestParam(value = "page", defaultValue = "1") int page,
 			@RequestParam(value = "limit", defaultValue = "50") int limit,
 			@RequestParam(value = "sort", required = false) String sort) {
+
 		return String.format("Get users was called: page:%d, limit:%d, sort:%s", page, limit, sort);
 	}
 
@@ -80,16 +82,43 @@ public class UserController {
 			users = new HashMap<>();
 		}
 		users.put(userId, userRes);
-		
+
 		return new ResponseEntity<UserRes>(
 				userRes,
 				HttpStatus.CREATED
 				);
 	}
 
-	@PutMapping
-	public String updateUser(@PathVariable String id) {
-		return "Update user was called";
+	@PutMapping(path="/{id}", consumes = {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE},
+	produces = {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<UserRes> updateUser(@PathVariable String id,
+			@Valid
+			@RequestBody UpdateUserDetailsRequestModel userDetails) {
+
+		if(users.containsKey(id))
+		{
+			UserRes userRes = users.get(id);
+
+			userRes.setFirstName(userDetails.getFirstName());
+			userRes.setLastName(userDetails.getLastName());
+
+			users.put(id, userRes);
+
+			return new ResponseEntity<>(
+					userRes,
+					HttpStatus.OK
+					);
+		}
+		else
+		{
+			return new ResponseEntity<>(
+					HttpStatus.NO_CONTENT
+					);
+		}
 	}
 
 	@DeleteMapping
