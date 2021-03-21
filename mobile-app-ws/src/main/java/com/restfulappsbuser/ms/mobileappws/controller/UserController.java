@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.restfulappsbuser.ms.mobileappws.exceptions.UserServiceException;
 import com.restfulappsbuser.ms.mobileappws.model.reponse.UserRes;
 import com.restfulappsbuser.ms.mobileappws.model.request.UpdateUserDetailsRequestModel;
 import com.restfulappsbuser.ms.mobileappws.model.request.UserDetailsRequestModel;
@@ -44,18 +45,23 @@ public class UserController {
 					} )
 	public ResponseEntity<UserRes> getUser(@PathVariable String id) {
 
-		if(users.containsKey(id))
-		{
-			return new ResponseEntity<>(
-					users.get(id),
-					HttpStatus.OK
-					);
+		try {
+			if(users.containsKey(id))
+			{
+				return new ResponseEntity<>(
+						users.get(id),
+						HttpStatus.OK
+						);
+			}
+			else
+			{
+				return new ResponseEntity<>(
+						HttpStatus.NO_CONTENT
+						);
+			}
 		}
-		else
-		{
-			return new ResponseEntity<>(
-					HttpStatus.NO_CONTENT
-					);
+		catch(Exception ex){
+			throw new UserServiceException("A user service exception:" + ex.getLocalizedMessage());
 		}
 	}
 
