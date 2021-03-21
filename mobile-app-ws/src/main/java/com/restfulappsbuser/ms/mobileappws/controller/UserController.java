@@ -121,9 +121,26 @@ public class UserController {
 		}
 	}
 
-	@DeleteMapping
-	public String deleteUser() {
-		return "Delete user was called";
+	@DeleteMapping(path="/{id}",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE
+					} )
+	public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+		if(users.containsKey(id))
+		{
+			users.remove(id);
+
+			return new ResponseEntity<>(
+					HttpStatus.ACCEPTED
+					);
+		}
+		else
+		{
+			return new ResponseEntity<>(
+					HttpStatus.NO_CONTENT
+					);
+		}
 	}
 
 }
