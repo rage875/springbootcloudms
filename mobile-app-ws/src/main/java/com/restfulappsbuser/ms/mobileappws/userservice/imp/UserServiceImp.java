@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.restfulappsbuser.ms.mobileappws.model.reponse.UserRes;
+import com.restfulappsbuser.ms.mobileappws.model.request.UpdateUserDetailsRequestModel;
 import com.restfulappsbuser.ms.mobileappws.model.request.UserDetailsRequestModel;
 import com.restfulappsbuser.ms.mobileappws.shared.Utils;
 import com.restfulappsbuser.ms.mobileappws.userservice.UserService;
@@ -20,6 +21,18 @@ public class UserServiceImp implements UserService{
 	public UserServiceImp(Utils utils)
 	{
 		this.utils = utils;
+	}
+	
+	@Override
+	public UserRes getUser(String id) {
+		UserRes userRes = null;
+
+		if(users.containsKey(id))
+		{
+			userRes = users.get(id);
+		}
+		
+		return userRes;
 	}
 
 	@Override
@@ -39,6 +52,36 @@ public class UserServiceImp implements UserService{
 		}
 		users.put(userId, userRes);
 
+		return userRes;
+	}
+
+	@Override
+	public UserRes updateUser(String id, UpdateUserDetailsRequestModel userDetails) {
+		UserRes userRes = null;
+
+		if(users.containsKey(id))
+		{
+			userRes = users.get(id);
+
+			userRes.setFirstName(userDetails.getFirstName());
+			userRes.setLastName(userDetails.getLastName());
+
+			users.put(id, userRes);
+		}
+		
+		return userRes;
+	}
+	
+	@Override
+	public UserRes deleteUser(String id) {
+		UserRes userRes = null;
+		
+		if(users.containsKey(id))
+		{
+			userRes = users.get(id);
+			users.remove(id);
+		}
+		
 		return userRes;
 	}
 	

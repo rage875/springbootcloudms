@@ -27,7 +27,6 @@ import com.restfulappsbuser.ms.mobileappws.userservice.UserService;
 @RestController
 @RequestMapping("users")
 public class UserController {
-	private Map<String, UserRes> users;
 
 	@Autowired
 	UserService userService;
@@ -49,19 +48,12 @@ public class UserController {
 	public ResponseEntity<UserRes> getUser(@PathVariable String id) {
 
 		try {
-			if(users.containsKey(id))
-			{
-				return new ResponseEntity<>(
-						users.get(id),
-						HttpStatus.OK
-						);
-			}
-			else
-			{
-				return new ResponseEntity<>(
-						HttpStatus.NO_CONTENT
-						);
-			}
+			UserRes userRes = userService.getUser(id);
+
+			return new ResponseEntity<>(
+					userRes,
+					HttpStatus.OK
+					);
 		}
 		catch(Exception ex){
 			throw new UserServiceException("A user service exception:" + ex.getLocalizedMessage());
@@ -97,15 +89,10 @@ public class UserController {
 			@Valid
 			@RequestBody UpdateUserDetailsRequestModel userDetails) {
 
-		if(users.containsKey(id))
+		UserRes userRes = userService.updateUser(id, userDetails);
+		
+		if(null != userRes)
 		{
-			UserRes userRes = users.get(id);
-
-			userRes.setFirstName(userDetails.getFirstName());
-			userRes.setLastName(userDetails.getLastName());
-
-			users.put(id, userRes);
-
 			return new ResponseEntity<>(
 					userRes,
 					HttpStatus.OK
@@ -117,6 +104,7 @@ public class UserController {
 					HttpStatus.NO_CONTENT
 					);
 		}
+
 	}
 
 	@DeleteMapping(path="/{id}",
@@ -125,10 +113,8 @@ public class UserController {
 					MediaType.APPLICATION_JSON_VALUE
 					} )
 	public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-		if(users.containsKey(id))
+		if(null != userService.deleteUser(id))
 		{
-			users.remove(id);
-
 			return new ResponseEntity<>(
 					HttpStatus.ACCEPTED
 					);
